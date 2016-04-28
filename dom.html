@@ -8,7 +8,33 @@
   <link href="https://resources.whatwg.org/bikeshed.css" rel="stylesheet">
   <link href="https://resources.whatwg.org/logo-dom.svg" rel="icon">
   <meta content="Bikeshed 1.0.0" name="generator">
-<style>.highlight .hll { background-color: #ffffcc }
+<style>/* style-md-lists */
+
+            /* This is a weird hack for me not yet following the commonmark spec
+               regarding paragraph and lists. */
+            [data-md] > :first-child {
+                margin-top: 0;
+            }
+            [data-md] > :last-child {
+                margin-bottom: 0;
+            }</style>
+<style>/* style-counters */
+
+            .issue:not(.no-marker)::before {
+                content: "Issue " counter(issue);
+            }
+
+            .example:not(.no-marker)::before {
+                content: "Example";
+                content: "Example " counter(example);
+            }
+            .invalid.example:not(.no-marker)::before,
+            .illegal.example:not(.no-marker)::before {
+                content: "Invalid Example";
+                content: "Invalid Example" counter(example);
+            }</style>
+<style>/* style-syntax-highlighting */
+.highlight .hll { background-color: #ffffcc }
 .highlight  { background: #ffffff; }
 .highlight .c { color: #708090 } /* Comment */
 .highlight .k { color: #990055 } /* Keyword */
@@ -66,12 +92,120 @@
         code.highlight { padding: .1em; border-radius: .3em; }
         pre.highlight, pre > code.highlight { display: block; padding: 1em; margin: .5em 0; overflow: auto; border-radius: 0; }
         </style>
+<style>/* style-selflinks */
+
+            .heading, .issue, .note, .example, li, dt {
+                position: relative;
+            }
+            a.self-link {
+                position: absolute;
+                top: 0;
+                left: calc(-1 * (3.5rem - 26px));
+                width: calc(3.5rem - 26px);
+                height: 2em;
+                text-align: center;
+                border: none;
+                transition: opacity .2s;
+                opacity: .5;
+            }
+            a.self-link:hover {
+                opacity: 1;
+            }
+            .heading > a.self-link {
+                font-size: 83%;
+            }
+            li > a.self-link {
+                left: calc(-1 * (3.5rem - 26px) - 2em);
+            }
+            dfn > a.self-link {
+                top: auto;
+                left: auto;
+                opacity: 0;
+                width: 1.5em;
+                height: 1.5em;
+                background: gray;
+                color: white;
+                font-style: normal;
+                transition: opacity .2s, background-color .2s, color .2s;
+            }
+            dfn:hover > a.self-link {
+                opacity: 1;
+            }
+            dfn > a.self-link:hover {
+                color: black;
+            }
+
+            a.self-link::before            { content: "¶"; }
+            .heading > a.self-link::before { content: "§"; }
+            dfn > a.self-link::before      { content: "#"; }</style>
+<style>/* style-autolinks */
+
+            .css.css, .property.property, .descriptor.descriptor {
+                color: #005a9c;
+                font-size: inherit;
+                font-family: inherit;
+            }
+            .css::before, .property::before, .descriptor::before {
+                content: "‘";
+            }
+            .css::after, .property::after, .descriptor::after {
+                content: "’";
+            }
+            .property, .descriptor {
+                /* Don't wrap property and descriptor names */
+                white-space: nowrap;
+            }
+            .type { /* CSS value <type> */
+                font-style: italic;
+            }
+            pre .property::before, pre .property::after {
+                content: "";
+            }
+            [data-link-type="property"]::before,
+            [data-link-type="propdesc"]::before,
+            [data-link-type="descriptor"]::before,
+            [data-link-type="value"]::before,
+            [data-link-type="function"]::before,
+            [data-link-type="at-rule"]::before,
+            [data-link-type="selector"]::before,
+            [data-link-type="maybe"]::before {
+                content: "‘";
+            }
+            [data-link-type="property"]::after,
+            [data-link-type="propdesc"]::after,
+            [data-link-type="descriptor"]::after,
+            [data-link-type="value"]::after,
+            [data-link-type="function"]::after,
+            [data-link-type="at-rule"]::after,
+            [data-link-type="selector"]::after,
+            [data-link-type="maybe"]::after {
+                content: "’";
+            }
+
+            [data-link-type].production::before,
+            [data-link-type].production::after,
+            .prod [data-link-type]::before,
+            .prod [data-link-type]::after {
+                content: "";
+            }
+
+            [data-link-type=element],
+            [data-link-type=element-attr] {
+                font-family: Menlo, Consolas, "DejaVu Sans Mono", monospace;
+                font-size: .9em;
+            }
+            [data-link-type=element]::before { content: "<" }
+            [data-link-type=element]::after  { content: ">" }
+
+            [data-link-type=biblio] {
+                white-space: pre;
+            }</style>
  <body class="h-entry status-LS">
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://whatwg.org/"> <img alt="WHATWG" height="100" src="https://resources.whatwg.org/logo-dom.svg"> </a> </p>
    <hgroup>
     <h1 class="p-name no-ref allcaps" id="title">DOM</h1>
-    <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Living Standard — Last Updated <time class="dt-updated" datetime="2016-04-27">27 April 2016</time></span></h2>
+    <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Living Standard — Last Updated <time class="dt-updated" datetime="2016-04-28">28 April 2016</time></span></h2>
    </hgroup>
    <div data-fill-with="spec-metadata">
     <dl>
@@ -697,8 +831,8 @@ for historical reasons.</p>
    <h3 class="heading settled" data-level="3.6" id="interface-eventtarget"><span class="secno">3.6. </span><span class="content">Interface <code class="idl"><a data-link-type="idl" href="#eventtarget">EventTarget</a></code></span><a class="self-link" href="#interface-eventtarget"></a></h3>
 <pre class="idl def">[Exposed=(Window,Worker)]
 interface <dfn class="idl-code" data-dfn-type="interface" data-export="" id="eventtarget">EventTarget<a class="self-link" href="#eventtarget"></a></dfn> {
-  void <a class="idl-code" data-link-type="method" href="#dom-eventtarget-addeventlistener">addEventListener</a>(DOMString <dfn class="idl-code" data-dfn-for="EventTarget/addEventListener(type, callback, options), EventTarget/addEventListener(type, callback)" data-dfn-type="argument" data-export="" id="dom-eventtarget-addeventlistener-type-callback-options-type">type<a class="self-link" href="#dom-eventtarget-addeventlistener-type-callback-options-type"></a></dfn>, <a data-link-type="idl-name" href="#callbackdef-eventlistener">EventListener</a>? callback, optional (<a data-link-type="idl-name" href="#dictdef-addeventlisteneroptions">AddEventListenerOptions</a> or boolean) <dfn class="idl-code" data-dfn-for="EventTarget/addEventListener(type, callback, options), EventTarget/addEventListener(type, callback)" data-dfn-type="argument" data-export="" id="dom-eventtarget-addeventlistener-type-callback-options-options">options<a class="self-link" href="#dom-eventtarget-addeventlistener-type-callback-options-options"></a></dfn>);
-  void <a class="idl-code" data-link-type="method" href="#dom-eventtarget-removeeventlistener">removeEventListener</a>(DOMString <dfn class="idl-code" data-dfn-for="EventTarget/removeEventListener(type, callback, options), EventTarget/removeEventListener(type, callback)" data-dfn-type="argument" data-export="" id="dom-eventtarget-removeeventlistener-type-callback-options-type">type<a class="self-link" href="#dom-eventtarget-removeeventlistener-type-callback-options-type"></a></dfn>, <a data-link-type="idl-name" href="#callbackdef-eventlistener">EventListener</a>? callback, optional (<a data-link-type="idl-name" href="#dictdef-eventlisteneroptions">EventListenerOptions</a> or boolean) <dfn class="idl-code" data-dfn-for="EventTarget/removeEventListener(type, callback, options), EventTarget/removeEventListener(type, callback)" data-dfn-type="argument" data-export="" id="dom-eventtarget-removeeventlistener-type-callback-options-options">options<a class="self-link" href="#dom-eventtarget-removeeventlistener-type-callback-options-options"></a></dfn>);
+  void <a class="idl-code" data-link-type="method" href="#dom-eventtarget-addeventlistener">addEventListener</a>(DOMString <dfn class="idl-code" data-dfn-for="EventTarget/addEventListener(type, callback, options), EventTarget/addEventListener(type, callback)" data-dfn-type="argument" data-export="" id="dom-eventtarget-addeventlistener-type-callback-options-type">type<a class="self-link" href="#dom-eventtarget-addeventlistener-type-callback-options-type"></a></dfn>, <a data-link-type="idl-name" href="#callbackdef-eventlistener">EventListener</a>? <dfn class="idl-code" data-dfn-for="EventTarget/addEventListener(type, callback, options), EventTarget/addEventListener(type, callback)" data-dfn-type="argument" data-export="" id="dom-eventtarget-addeventlistener-type-callback-options-callback">callback<a class="self-link" href="#dom-eventtarget-addeventlistener-type-callback-options-callback"></a></dfn>, optional (<a data-link-type="idl-name" href="#dictdef-addeventlisteneroptions">AddEventListenerOptions</a> or boolean) <dfn class="idl-code" data-dfn-for="EventTarget/addEventListener(type, callback, options), EventTarget/addEventListener(type, callback)" data-dfn-type="argument" data-export="" id="dom-eventtarget-addeventlistener-type-callback-options-options">options<a class="self-link" href="#dom-eventtarget-addeventlistener-type-callback-options-options"></a></dfn>);
+  void <a class="idl-code" data-link-type="method" href="#dom-eventtarget-removeeventlistener">removeEventListener</a>(DOMString <dfn class="idl-code" data-dfn-for="EventTarget/removeEventListener(type, callback, options), EventTarget/removeEventListener(type, callback)" data-dfn-type="argument" data-export="" id="dom-eventtarget-removeeventlistener-type-callback-options-type">type<a class="self-link" href="#dom-eventtarget-removeeventlistener-type-callback-options-type"></a></dfn>, <a data-link-type="idl-name" href="#callbackdef-eventlistener">EventListener</a>? <dfn class="idl-code" data-dfn-for="EventTarget/removeEventListener(type, callback, options), EventTarget/removeEventListener(type, callback)" data-dfn-type="argument" data-export="" id="dom-eventtarget-removeeventlistener-type-callback-options-callback">callback<a class="self-link" href="#dom-eventtarget-removeeventlistener-type-callback-options-callback"></a></dfn>, optional (<a data-link-type="idl-name" href="#dictdef-eventlisteneroptions">EventListenerOptions</a> or boolean) <dfn class="idl-code" data-dfn-for="EventTarget/removeEventListener(type, callback, options), EventTarget/removeEventListener(type, callback)" data-dfn-type="argument" data-export="" id="dom-eventtarget-removeeventlistener-type-callback-options-options">options<a class="self-link" href="#dom-eventtarget-removeeventlistener-type-callback-options-options"></a></dfn>);
   boolean <a class="idl-code" data-link-type="method" href="#dom-eventtarget-dispatchevent">dispatchEvent</a>(<a data-link-type="idl-name" href="#event">Event</a> <dfn class="idl-code" data-dfn-for="EventTarget/dispatchEvent(event)" data-dfn-type="argument" data-export="" id="dom-eventtarget-dispatchevent-event-event">event<a class="self-link" href="#dom-eventtarget-dispatchevent-event-event"></a></dfn>);
 };
 
@@ -1787,7 +1921,7 @@ associated list of <code class="idl"><a data-link-type="idl" href="#mutationobse
 mutations within a given <a data-link-type="dfn" href="#concept-node">node</a>’s <a data-link-type="dfn" href="#concept-tree-descendant">descendants</a> after <a data-link-type="dfn" href="#concept-node">node</a> has been
 removed so they do not get lost when <code>subtree</code> is set to true on <a data-link-type="dfn" href="#concept-node">node</a>’s <a data-link-type="dfn" href="#concept-tree-parent">parent</a>. </p>
    <h4 class="heading settled" data-level="4.3.1" id="interface-mutationobserver"><span class="secno">4.3.1. </span><span class="content">Interface <code class="idl"><a data-link-type="idl" href="#mutationobserver">MutationObserver</a></code></span><a class="self-link" href="#interface-mutationobserver"></a></h4>
-<pre class="idl def">[<a class="idl-code" data-link-type="constructor" href="#dom-mutationobserver-mutationobserver">Constructor</a>(<a data-link-type="idl-name" href="#callbackdef-mutationcallback">MutationCallback</a> callback)]
+<pre class="idl def">[<a class="idl-code" data-link-type="constructor" href="#dom-mutationobserver-mutationobserver">Constructor</a>(<a data-link-type="idl-name" href="#callbackdef-mutationcallback">MutationCallback</a> <dfn class="idl-code" data-dfn-for="MutationObserver/MutationObserver(callback)" data-dfn-type="argument" data-export="" id="dom-mutationobserver-mutationobserver-callback-callback">callback<a class="self-link" href="#dom-mutationobserver-mutationobserver-callback-callback"></a></dfn>)]
 interface <dfn class="idl-code" data-dfn-type="interface" data-export="" id="mutationobserver">MutationObserver<a class="self-link" href="#mutationobserver"></a></dfn> {
   void <a class="idl-code" data-link-type="method" href="#dom-mutationobserver-observe">observe</a>(<a data-link-type="idl-name" href="#node">Node</a> <dfn class="idl-code" data-dfn-for="MutationObserver/observe(target, options)" data-dfn-type="argument" data-export="" id="dom-mutationobserver-observe-target-options-target">target<a class="self-link" href="#dom-mutationobserver-observe-target-options-target"></a></dfn>, <a data-link-type="idl-name" href="#dictdef-mutationobserverinit">MutationObserverInit</a> <dfn class="idl-code" data-dfn-for="MutationObserver/observe(target, options)" data-dfn-type="argument" data-export="" id="dom-mutationobserver-observe-target-options-options">options<a class="self-link" href="#dom-mutationobserver-observe-target-options-options"></a></dfn>);
   void <a class="idl-code" data-link-type="method" href="#dom-mutationobserver-disconnect">disconnect</a>();
@@ -2582,7 +2716,7 @@ interface <dfn class="idl-code" data-dfn-type="interface" data-export="" id="doc
   [NewObject] <a data-link-type="idl-name" href="#attr">Attr</a> <a class="idl-code" data-link-type="method" href="#dom-document-createattribute">createAttribute</a>(DOMString <dfn class="idl-code" data-dfn-for="Document/createAttribute(localName)" data-dfn-type="argument" data-export="" id="dom-document-createattribute-localname-localname">localName<a class="self-link" href="#dom-document-createattribute-localname-localname"></a></dfn>);
   [NewObject] <a data-link-type="idl-name" href="#attr">Attr</a> <a class="idl-code" data-link-type="method" href="#dom-document-createattributens">createAttributeNS</a>(DOMString? <dfn class="idl-code" data-dfn-for="Document/createAttributeNS(namespace, qualifiedName)" data-dfn-type="argument" data-export="" id="dom-document-createattributens-namespace-qualifiedname-namespace">namespace<a class="self-link" href="#dom-document-createattributens-namespace-qualifiedname-namespace"></a></dfn>, DOMString <dfn class="idl-code" data-dfn-for="Document/createAttributeNS(namespace, qualifiedName)" data-dfn-type="argument" data-export="" id="dom-document-createattributens-namespace-qualifiedname-qualifiedname">qualifiedName<a class="self-link" href="#dom-document-createattributens-namespace-qualifiedname-qualifiedname"></a></dfn>);
 
-  [NewObject] <a data-link-type="idl-name" href="#event">Event</a> <a class="idl-code" data-link-type="method" href="#dom-document-createevent">createEvent</a>(DOMString interface);
+  [NewObject] <a data-link-type="idl-name" href="#event">Event</a> <a class="idl-code" data-link-type="method" href="#dom-document-createevent">createEvent</a>(DOMString <dfn class="idl-code" data-dfn-for="Document/createEvent(interface)" data-dfn-type="argument" data-export="" id="dom-document-createevent-interface-interface">interface<a class="self-link" href="#dom-document-createevent-interface-interface"></a></dfn>);
 
   [NewObject] <a data-link-type="idl-name" href="#range">Range</a> <a class="idl-code" data-link-type="method" href="#dom-document-createrange">createRange</a>();
 
@@ -3183,7 +3317,7 @@ interface <dfn class="idl-code" data-dfn-type="interface" data-export="" id="sha
   readonly attribute <a data-link-type="idl-name" href="#element">Element</a> <a class="idl-code" data-link-type="attribute" data-readonly="" data-type="Element " href="#dom-shadowroot-host">host</a>;
 };
 
-enum <dfn class="idl-code" data-dfn-type="enum" data-export="" id="enumdef-shadowrootmode">ShadowRootMode<a class="self-link" href="#enumdef-shadowrootmode"></a></dfn> { <dfn class="idl-code" data-dfn-for="ShadowRootMode" data-dfn-type="enum-value" data-export="" id="dom-shadowrootmode-open">"open"<a class="self-link" href="#dom-shadowrootmode-open"></a></dfn>, <dfn class="idl-code" data-dfn-for="ShadowRootMode" data-dfn-type="enum-value" data-export="" id="dom-shadowrootmode-closed">"closed"<a class="self-link" href="#dom-shadowrootmode-closed"></a></dfn> };
+enum <dfn class="idl-code" data-dfn-type="enum" data-export="" id="enumdef-shadowrootmode">ShadowRootMode<a class="self-link" href="#enumdef-shadowrootmode"></a></dfn> { <dfn class="idl-code" data-dfn-for="ShadowRootMode" data-dfn-type="enum-value" data-export="" data-lt="&quot;open&quot;|open" id="dom-shadowrootmode-open">"open"<a class="self-link" href="#dom-shadowrootmode-open"></a></dfn>, <dfn class="idl-code" data-dfn-for="ShadowRootMode" data-dfn-type="enum-value" data-export="" data-lt="&quot;closed&quot;|closed" id="dom-shadowrootmode-closed">"closed"<a class="self-link" href="#dom-shadowrootmode-closed"></a></dfn> };
 </pre>
    <p><code class="idl"><a data-link-type="idl" href="#shadowroot">ShadowRoot</a></code> <a data-link-type="dfn" href="#concept-node">nodes</a> are simply known as <dfn data-dfn-type="dfn" data-export="" data-lt="shadow root" id="concept-shadow-root">shadow roots<a class="self-link" href="#concept-shadow-root"></a></dfn>. </p>
    <p><a data-link-type="dfn" href="#concept-shadow-root">Shadow roots</a> have an associated <dfn data-dfn-for="ShadowRoot" data-dfn-type="dfn" data-noexport="" id="shadowroot-mode">mode<a class="self-link" href="#shadowroot-mode"></a></dfn> ("<code>open</code>"
@@ -5444,6 +5578,7 @@ neighboring rights to this work.</p>
    <li><a href="#dom-range-clonerange">cloneRange()</a><span>, in §5.2</span>
    <li><a href="#concept-range-clone">clone the contents of a range</a><span>, in §5.2</span>
    <li><a href="#concept-node-clone-ext">cloning steps</a><span>, in §4.4</span>
+   <li><a href="#dom-shadowrootmode-closed">closed</a><span>, in §4.8</span>
    <li><a href="#dom-shadowrootmode-closed">"closed"</a><span>, in §4.8</span>
    <li><a href="#dom-element-closest">closest(selectors)</a><span>, in §4.9</span>
    <li><a href="#dom-range-collapse">collapse()</a><span>, in §5.2</span>
@@ -5538,9 +5673,9 @@ neighboring rights to this work.</p>
      <li><a href="#dom-document-doctype">attribute for Document</a><span>, in §4.5</span>
      <li><a href="#concept-doctype">definition of</a><span>, in §4.6</span>
     </ul>
+   <li><a href="#dom-document-document">Document()</a><span>, in §4.5</span>
    <li><a href="#document">Document</a><span>, in §4.5</span>
    <li><a href="#concept-document">document</a><span>, in §4.5</span>
-   <li><a href="#dom-document-document">Document()</a><span>, in §4.5</span>
    <li><a href="#dom-document-documentelement">documentElement</a><span>, in §4.5</span>
    <li><a href="#document-element">document element</a><span>, in §4.2.1</span>
    <li><a href="#documentfragment">DocumentFragment</a><span>, in §4.7</span>
@@ -5890,6 +6025,7 @@ namespace and local name localName</a><span>, in §4.4</span>
    <li><a href="#dom-mutationrecord-oldvalue">oldValue</a><span>, in §4.3.3</span>
    <li><a href="#dom-addeventlisteneroptions-once">once</a><span>, in §3.6</span>
    <li><a href="#dom-shadowrootmode-open">"open"</a><span>, in §4.8</span>
+   <li><a href="#dom-shadowrootmode-open">open</a><span>, in §4.8</span>
    <li><a href="#concept-ordered-set-parser">ordered set parser</a><span>, in §2.3</span>
    <li><a href="#concept-ordered-set-serializer">ordered set serializer</a><span>, in §2.3</span>
    <li><a href="#dom-document-origin">origin</a><span>, in §4.5</span>
@@ -6394,8 +6530,8 @@ dictionary <a href="#dictdef-customeventinit">CustomEventInit</a> : <a data-link
 
 [Exposed=(Window,Worker)]
 interface <a href="#eventtarget">EventTarget</a> {
-  void <a class="idl-code" data-link-type="method" href="#dom-eventtarget-addeventlistener">addEventListener</a>(DOMString <a href="#dom-eventtarget-addeventlistener-type-callback-options-type">type</a>, <a data-link-type="idl-name" href="#callbackdef-eventlistener">EventListener</a>? callback, optional (<a data-link-type="idl-name" href="#dictdef-addeventlisteneroptions">AddEventListenerOptions</a> or boolean) <a href="#dom-eventtarget-addeventlistener-type-callback-options-options">options</a>);
-  void <a class="idl-code" data-link-type="method" href="#dom-eventtarget-removeeventlistener">removeEventListener</a>(DOMString <a href="#dom-eventtarget-removeeventlistener-type-callback-options-type">type</a>, <a data-link-type="idl-name" href="#callbackdef-eventlistener">EventListener</a>? callback, optional (<a data-link-type="idl-name" href="#dictdef-eventlisteneroptions">EventListenerOptions</a> or boolean) <a href="#dom-eventtarget-removeeventlistener-type-callback-options-options">options</a>);
+  void <a class="idl-code" data-link-type="method" href="#dom-eventtarget-addeventlistener">addEventListener</a>(DOMString <a href="#dom-eventtarget-addeventlistener-type-callback-options-type">type</a>, <a data-link-type="idl-name" href="#callbackdef-eventlistener">EventListener</a>? <a href="#dom-eventtarget-addeventlistener-type-callback-options-callback">callback</a>, optional (<a data-link-type="idl-name" href="#dictdef-addeventlisteneroptions">AddEventListenerOptions</a> or boolean) <a href="#dom-eventtarget-addeventlistener-type-callback-options-options">options</a>);
+  void <a class="idl-code" data-link-type="method" href="#dom-eventtarget-removeeventlistener">removeEventListener</a>(DOMString <a href="#dom-eventtarget-removeeventlistener-type-callback-options-type">type</a>, <a data-link-type="idl-name" href="#callbackdef-eventlistener">EventListener</a>? <a href="#dom-eventtarget-removeeventlistener-type-callback-options-callback">callback</a>, optional (<a data-link-type="idl-name" href="#dictdef-eventlisteneroptions">EventListenerOptions</a> or boolean) <a href="#dom-eventtarget-removeeventlistener-type-callback-options-options">options</a>);
   boolean <a class="idl-code" data-link-type="method" href="#dom-eventtarget-dispatchevent">dispatchEvent</a>(<a data-link-type="idl-name" href="#event">Event</a> <a href="#dom-eventtarget-dispatchevent-event-event">event</a>);
 };
 
@@ -6488,7 +6624,7 @@ interface <a href="#htmlcollection">HTMLCollection</a> {
   getter <a data-link-type="idl-name" href="#element">Element</a>? <a class="idl-code" data-link-type="method" href="#dom-htmlcollection-nameditem">namedItem</a>(DOMString <a href="#dom-htmlcollection-nameditem-name-name">name</a>);
 };
 
-[<a class="idl-code" data-link-type="constructor" href="#dom-mutationobserver-mutationobserver">Constructor</a>(<a data-link-type="idl-name" href="#callbackdef-mutationcallback">MutationCallback</a> callback)]
+[<a class="idl-code" data-link-type="constructor" href="#dom-mutationobserver-mutationobserver">Constructor</a>(<a data-link-type="idl-name" href="#callbackdef-mutationcallback">MutationCallback</a> <a href="#dom-mutationobserver-mutationobserver-callback-callback">callback</a>)]
 interface <a href="#mutationobserver">MutationObserver</a> {
   void <a class="idl-code" data-link-type="method" href="#dom-mutationobserver-observe">observe</a>(<a data-link-type="idl-name" href="#node">Node</a> <a href="#dom-mutationobserver-observe-target-options-target">target</a>, <a data-link-type="idl-name" href="#dictdef-mutationobserverinit">MutationObserverInit</a> <a href="#dom-mutationobserver-observe-target-options-options">options</a>);
   void <a class="idl-code" data-link-type="method" href="#dom-mutationobserver-disconnect">disconnect</a>();
@@ -6610,7 +6746,7 @@ interface <a href="#document">Document</a> : <a data-link-type="idl-name" href="
   [NewObject] <a data-link-type="idl-name" href="#attr">Attr</a> <a class="idl-code" data-link-type="method" href="#dom-document-createattribute">createAttribute</a>(DOMString <a href="#dom-document-createattribute-localname-localname">localName</a>);
   [NewObject] <a data-link-type="idl-name" href="#attr">Attr</a> <a class="idl-code" data-link-type="method" href="#dom-document-createattributens">createAttributeNS</a>(DOMString? <a href="#dom-document-createattributens-namespace-qualifiedname-namespace">namespace</a>, DOMString <a href="#dom-document-createattributens-namespace-qualifiedname-qualifiedname">qualifiedName</a>);
 
-  [NewObject] <a data-link-type="idl-name" href="#event">Event</a> <a class="idl-code" data-link-type="method" href="#dom-document-createevent">createEvent</a>(DOMString interface);
+  [NewObject] <a data-link-type="idl-name" href="#event">Event</a> <a class="idl-code" data-link-type="method" href="#dom-document-createevent">createEvent</a>(DOMString <a href="#dom-document-createevent-interface-interface">interface</a>);
 
   [NewObject] <a data-link-type="idl-name" href="#range">Range</a> <a class="idl-code" data-link-type="method" href="#dom-document-createrange">createRange</a>();
 
